@@ -1,15 +1,22 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-import joblib
+from pathlib import Path
 
-st.set_page_config(page_title="Prediksi Pembayaran Klaim", layout="wide")
+import joblib
+import pandas as pd
+import streamlit as st
+
+
+BASE_DIR = Path(__file__).resolve().parent
+
+MODEL_FILE = BASE_DIR / "best_model_pipeline.pkl"
+METADATA_FILE = BASE_DIR / "model_metadata.pkl"
+
 
 @st.cache_resource
 def load_artifacts():
-    model = joblib.load('best_model_pipeline_final.pkl')
-    metadata = joblib.load('model_metadata_final.pkl')
+    model = joblib.load(MODEL_FILE)
+    metadata = joblib.load(METADATA_FILE)
     return model, metadata
+
 
 model, metadata = load_artifacts()
 numerical_cols = metadata['numerical_cols']
