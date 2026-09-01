@@ -5,14 +5,67 @@ import pandas as pd
 import streamlit as st
 
 
+# ============================================================
+# BASE PATH
+# ============================================================
+
 BASE_DIR = Path(__file__).resolve().parent
 
-MODEL_FILE = BASE_DIR / "best_model_pipeline.pkl"
-METADATA_FILE = BASE_DIR / "model_metadata.pkl"
+MODEL_FILE = (
+    BASE_DIR
+    / "best_model_pipeline.pkl"
+)
 
+METADATA_FILE = (
+    BASE_DIR
+    / "model_metadata.pkl"
+)
+
+
+# ============================================================
+# DEBUG PATH
+# ============================================================
+
+st.write("App folder:", BASE_DIR)
+st.write("Model path:", MODEL_FILE)
+st.write("Metadata path:", METADATA_FILE)
+
+
+# ============================================================
+# VALIDASI FILE
+# ============================================================
+
+if not MODEL_FILE.exists():
+    st.error(
+        f"Model tidak ditemukan: {MODEL_FILE}"
+    )
+    st.stop()
+
+if not METADATA_FILE.exists():
+    st.error(
+        f"Metadata tidak ditemukan: {METADATA_FILE}"
+    )
+    st.stop()
+
+
+# ============================================================
+# LOAD ARTIFACTS
+# ============================================================
 
 @st.cache_resource
 def load_artifacts():
+    model = joblib.load(
+        MODEL_FILE
+    )
+
+    metadata = joblib.load(
+        METADATA_FILE
+    )
+
+    return model, metadata
+
+
+model, metadata = load_artifacts():
     model = joblib.load(MODEL_FILE)
     metadata = joblib.load(METADATA_FILE)
     return model, metadata
